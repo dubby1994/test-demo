@@ -32,9 +32,10 @@ public class DB1UserDAO {
     }
 
     public List<User> userList() {
-        SqlSession session = SQL_SESSION_FACTORY.openSession();
-        UserMapper userMapper = session.getMapper(UserMapper.class);
-        return userMapper.selectAll();
+        try(SqlSession session = SQL_SESSION_FACTORY.openSession()) {
+            UserMapper userMapper = session.getMapper(UserMapper.class);
+            return userMapper.selectAll();
+        }
     }
 
 }

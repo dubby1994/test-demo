@@ -1,6 +1,5 @@
 package cn.dubby.test.demo.config;
 
-import cn.dubby.test.demo.bean.User;
 import cn.dubby.test.demo.mapper.UserMapper;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.apache.ibatis.mapping.Environment;
@@ -18,12 +17,18 @@ import javax.sql.DataSource;
  */
 public class ConfigurationDAO {
 
+    private MyBatisConfig.DataSourceConfig config;
     private SqlSessionFactory sqlSessionFactory;
 
-    protected void init(String name, String driver, String url, String username, String password) {
-        DataSource dataSource = new UnpooledDataSource(driver, url, username, password);
+    public void init(MyBatisConfig.DataSourceConfig config) {
+        this.config = config;
+        initSqlSessionFactory();
+    }
+
+    private void initSqlSessionFactory() {
+        DataSource dataSource = new UnpooledDataSource(config.getDriver(), config.getUrl(), config.getUsername(), config.getPassword());
         TransactionFactory transactionFactory = new JdbcTransactionFactory();
-        Environment environment = new Environment(name, transactionFactory, dataSource);
+        Environment environment = new Environment(config.getName(), transactionFactory, dataSource);
         Configuration configuration = new Configuration(environment);
         initConfiguration(configuration);
         sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
@@ -47,4 +52,7 @@ public class ConfigurationDAO {
         return sqlSessionFactory.openSession(autoCommit);
     }
 
+    public MyBatisConfig.DataSourceConfig getConfig() {
+        return config;
+    }
 }

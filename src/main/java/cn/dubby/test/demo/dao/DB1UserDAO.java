@@ -22,8 +22,7 @@ public class DB1UserDAO extends ConfigurationDAO {
 
     @PostConstruct
     public void init() {
-        MyBatisConfig.DataSourceConfig config = myBatisConfig.getDb1();
-        init(config.getName(), config.getDriver(), config.getUrl(), config.getUsername(), config.getPassword());
+        init(myBatisConfig.getDb1());
     }
 
     public List<User> userList() {
